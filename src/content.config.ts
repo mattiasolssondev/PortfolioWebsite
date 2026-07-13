@@ -39,17 +39,22 @@ const games = defineCollection({
         });
       }
 
-      if (
-        data.embedUrl &&
-        !data.embedUrl.startsWith('https://play.unity3dusercontent.com/')
-      ) {
+      if (data.embedUrl && !isValidEmbedUrl(data.embedUrl)) {
         ctx.addIssue({
           code: 'custom',
-          message: 'embedUrl must use https://play.unity3dusercontent.com/',
+          message:
+            'embedUrl must be a Unity Play embed URL (play.unity3dusercontent.com or play-prod.struckd.com frame API)',
           path: ['embedUrl'],
         });
       }
     }),
 });
+
+function isValidEmbedUrl(url: string): boolean {
+  return (
+    url.startsWith('https://play.unity3dusercontent.com/') ||
+    url.startsWith('https://play-prod.struckd.com/api/v1/games/game/')
+  );
+}
 
 export const collections = { games };
