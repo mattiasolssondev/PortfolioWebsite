@@ -10,7 +10,7 @@ Checklist: Unity Play publish → embed URL → content file → deploy to Verce
 - [ ] Share URL copied (`unityPlayUrl`)
 - [ ] Embed URL copied from Share → Embed (`embedUrl`)
 - [ ] Thumbnail prepared (800×450, 16:9)
-- [ ] Content file in `content/games/`
+- [ ] Content file in `src/content/games/`
 - [ ] Build passes locally
 - [ ] Pushed to `main` → Vercel deploys
 
@@ -32,14 +32,14 @@ Follow [Unity Play integration](unity-play-integration.md). You need **both** UR
 ## 2. Prepare thumbnail
 
 ```
-content/games/images/my-game/cover.png
+src/content/games/images/my-game/cover.png
 ```
 
 ---
 
 ## 3. Create content file
 
-`content/games/my-game.md`:
+`src/content/games/my-game.md`:
 
 ```markdown
 ---
@@ -84,7 +84,7 @@ npm run build
 ## 5. Deploy
 
 ```bash
-git add content/games/
+git add src/content/games/
 git commit -m "Add game: My Game"
 git push
 ```

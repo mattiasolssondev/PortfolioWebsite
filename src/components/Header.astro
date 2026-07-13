@@ -1,0 +1,36 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<header class="border-b border-border bg-surface/80 backdrop-blur-sm">
+  <div
+    class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6"
+  >
+    <a
+      href="/"
+      class="font-display text-xl font-bold tracking-tight text-white transition-colors hover:text-accent sm:text-2xl"
+    >
+      Playframe
+    </a>
+    <nav class="flex items-center gap-6 text-sm font-medium">
+      <a
+        href="/"
+        class:list={[
+          'transition-colors hover:text-accent',
+          currentPath === '/' ? 'text-accent' : 'text-muted',
+        ]}
+      >
+        Games
+      </a>
+      <a
+        href="/about"
+        class:list={[
+          'transition-colors hover:text-accent',
+          currentPath === '/about' ? 'text-accent' : 'text-muted',
+        ]}
+      >
+        About
+      </a>
+    </nav>
+  </div>
+</header>

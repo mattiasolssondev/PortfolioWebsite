@@ -1,7 +1,7 @@
 # Playframe design spec
 
 **Date:** 2026-07-13  
-**Status:** Approved  
+**Status:** Implemented (MVP)  
 **Author:** Project setup  
 
 ---
@@ -246,4 +246,5 @@ Game detail:
 
 - [x] Design reviewed by project owner
 - [x] Open questions resolved
-- [ ] Ready for implementation plan
+- [x] Ready for implementation plan
+- [x] Phase 1 MVP scaffolded

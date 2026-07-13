@@ -6,62 +6,75 @@ A dark-themed game portfolio hosted on [Vercel](https://vercel.com/), showcasing
 
 ## Status
 
-**Phase:** Documentation and planning (implementation not started)
+**Phase:** MVP scaffolded — ready to add games and deploy
 
-See [docs/README.md](docs/README.md) for the full documentation index.
+## Quick start
 
-## Quick links
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # production build → dist/
+```
 
-| Doc | Purpose |
-|-----|---------|
-| [Design spec](docs/superpowers/specs/2026-07-13-playframe-design.md) | What we're building and why |
-| [Embed research](docs/research/unity-play-embed-research.md) | Unity Play iframe — no self-hosting |
-| [Stack research](docs/research/website-stack-research.md) | Framework and hosting comparison |
-| [Architecture](docs/architecture/overview.md) | Site structure and data flow |
-| [Unity Play guide](docs/guides/unity-play-integration.md) | Publish games and get embed URLs |
-| [Adding a game](docs/guides/adding-a-game.md) | Add a new game to the site |
-| [Deployment](docs/guides/deployment.md) | Deploy to Vercel |
+## Add a game
+
+1. Publish WebGL to [Unity Play](https://play.unity.com/upload)
+2. Copy share URL + embed URL (Share → Embed)
+3. Create `src/content/games/my-game.md` (see `your-first-game.md` for template)
+4. Add thumbnail to `public/images/`
+5. Set `status: released` and include `embedUrl`
+6. Push to `main` → Vercel deploys
+
+Full guide: [docs/guides/adding-a-game.md](docs/guides/adding-a-game.md)
 
 ## Stack
 
 | Layer | Choice |
 |-------|--------|
-| Framework | [Astro](https://astro.build/) + Content Collections |
+| Framework | [Astro 7](https://astro.build/) + Content Collections |
+| Styling | Tailwind CSS 4, dark theme |
 | Hosting | **Vercel** |
 | Game hosting | **Unity Play** (embedded via iframe) |
-| Theme | **Dark-first** |
-| Content | Markdown game catalog in git |
+| Content | `src/content/games/*.md` |
 
 ## Workflow
 
 ```
-Unity → WebGL build → Unity Play → copy embed URL → add to Playframe → deploy to Vercel
+Unity → WebGL build → Unity Play → copy embed URL → add src/content/games/*.md → deploy to Vercel
 ```
 
-WebGL files stay on Unity Play. Vercel only serves the static site (HTML, CSS, thumbnails, metadata).
-
-## Repository structure (planned)
+## Project structure
 
 ```
 /
-├── docs/                  # Project documentation
-├── src/                   # Astro site source (to be scaffolded)
-├── public/                # Static assets (images, favicon)
-├── content/
-│   └── games/             # Game metadata (one file per game)
-└── README.md
+├── src/
+│   ├── components/       # GameCard, UnityPlayEmbed, Header, Footer
+│   ├── content/games/    # Game markdown entries
+│   ├── layouts/          # BaseLayout, GameLayout
+│   ├── pages/            # Home, about, game detail, 404
+│   └── styles/global.css # Dark theme tokens
+├── public/images/        # Thumbnails and static assets
+├── docs/                 # Project documentation
+└── vercel.json
 ```
 
-## Getting started
+## Documentation
 
-1. Read the [design spec](docs/superpowers/specs/2026-07-13-playframe-design.md)
-2. Read [Unity Play embed research](docs/research/unity-play-embed-research.md)
-3. Review [architecture overview](docs/architecture/overview.md)
+See [docs/README.md](docs/README.md) for the full index.
+
+| Doc | Purpose |
+|-----|---------|
+| [Design spec](docs/superpowers/specs/2026-07-13-playframe-design.md) | Approved architecture and UI direction |
+| [Embed research](docs/research/unity-play-embed-research.md) | Unity Play iframe without self-hosting |
+| [Unity Play guide](docs/guides/unity-play-integration.md) | Publish and get embed URLs |
+| [Deployment](docs/guides/deployment.md) | Deploy to Vercel |
+
+## Deploy to Vercel
+
+1. Import this repo at [vercel.com/new](https://vercel.com/new)
+2. Vercel auto-detects Astro — deploy
+3. Add custom domain later in project settings
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## License
-
-TBD — add a license before public release.
