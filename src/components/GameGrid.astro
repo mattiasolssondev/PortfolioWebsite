@@ -1,0 +1,24 @@
+---
+import GameCard from './GameCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  games: CollectionEntry<'games'>[];
+}
+
+const { games } = Astro.props;
+---
+
+{
+  games.length === 0 ? (
+    <p class="rounded-xl border border-dashed border-border bg-surface-raised p-12 text-center text-muted">
+      No games yet. Add one in <code class="text-accent">src/content/games/</code>
+    </p>
+  ) : (
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {games.map((game) => (
+        <GameCard game={game} />
+      ))}
+    </div>
+  )
+}

@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --color-surface: #12121a;
+  --color-surface-raised: #1a1a24;
+  --color-border: #2a2a3a;
+  --color-accent: #8b7cf7;
+  --color-accent-dim: #6b5cd4;
+  --color-muted: #9494a8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #0a0a0f;
+  color: #e8e8ed;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+.embed-aspect {
+  aspect-ratio: 16 / 9;
+}
+
+.card-glow {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card-glow:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 50%, var(--color-border));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--color-accent) 15%, transparent);
+  transform: translateY(-2px);
+}

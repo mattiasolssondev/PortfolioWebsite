@@ -1,0 +1,59 @@
+---
+interface Props {
+  embedUrl: string;
+  unityPlayUrl: string;
+  title: string;
+}
+
+const { embedUrl, unityPlayUrl, title } = Astro.props;
+const iframeId = `embed-${title.replace(/\s+/g, '-').toLowerCase()}`;
+---
+
+<div class="overflow-hidden rounded-xl border border-border bg-surface-raised">
+  <div class="embed-aspect relative w-full bg-[#0f0f14]" id={`${iframeId}-container`}>
+    <button
+      type="button"
+      id={`${iframeId}-play`}
+      class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0f0f14] transition-opacity"
+      aria-label={`Play ${title}`}
+    >
+      <span
+        class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-2xl text-white shadow-lg shadow-accent/30"
+      >
+        ▶
+      </span>
+      <span class="text-sm font-medium text-muted">Click to play</span>
+    </button>
+    <iframe
+      id={iframeId}
+      class="absolute inset-0 h-full w-full opacity-0"
+      title={`${title} — Unity Play`}
+      allow="autoplay; fullscreen; vr"
+      allowfullscreen
+      loading="lazy"
+    ></iframe>
+  </div>
+  <div class="flex items-center justify-between border-t border-border px-4 py-3">
+    <p class="text-xs text-muted">Powered by Unity Play</p>
+    <a
+      href={unityPlayUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-sm font-medium text-accent transition-colors hover:text-white"
+    >
+      Open on Unity Play ↗
+    </a>
+  </div>
+</div>
+
+<script define:vars={{ embedUrl, iframeId }}>
+  const playBtn = document.getElementById(`${iframeId}-play`);
+  const iframe = document.getElementById(iframeId);
+
+  playBtn?.addEventListener('click', () => {
+    if (!(iframe instanceof HTMLIFrameElement)) return;
+    iframe.src = embedUrl;
+    iframe.classList.remove('opacity-0');
+    playBtn.style.display = 'none';
+  });
+</script>
