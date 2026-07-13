@@ -1,71 +1,52 @@
 # Deployment
 
-How to build and deploy Verdacio to production.
+Deploy Playframe to **Vercel**. Vercel serves only static files — no WebGL game binaries.
 
 ---
 
 ## Build output
 
-Astro produces a static site in `dist/`:
-
 ```bash
-npm run build
-npm run preview   # optional local preview of production build
+npm run build    # outputs to dist/
+npm run preview  # local preview of production build
 ```
-
-Everything in `dist/` can be served by any static host or CDN.
 
 ---
 
-## Recommended hosts
-
-### Cloudflare Pages
+## Vercel setup
 
 1. Push repo to GitHub
-2. [Cloudflare Dashboard](https://dash.cloudflare.com/) → Pages → Create project
-3. Connect GitHub repo
-4. Build settings:
-   - **Framework preset:** Astro
+2. Import at [vercel.com/new](https://vercel.com/new)
+3. Vercel auto-detects Astro:
    - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-   - **Node version:** 20 (set via `NODE_VERSION` env var)
-5. Deploy
+   - **Output directory:** `dist`
+4. Deploy
 
-**Custom domain:** Pages → Custom domains → add your domain.
+Preview deployments are created automatically for pull requests.
 
-### Vercel
+---
 
-1. Import repo at [vercel.com/new](https://vercel.com/new)
-2. Vercel auto-detects Astro
-3. Deploy
+## Custom domain (later)
 
-**Custom domain:** Project Settings → Domains.
+When ready:
+
+1. Vercel → Project Settings → Domains
+2. Add your domain and configure DNS per Vercel instructions
+3. Update `site` in `astro.config.mjs`:
+
+```javascript
+export default defineConfig({
+  site: 'https://yourdomain.com',
+});
+```
+
+Until then, the site runs on `your-project.vercel.app`.
 
 ---
 
 ## Environment variables
 
-v1 requires **no** environment variables. All content is in the repo.
-
-Future optional vars:
-
-| Variable | Purpose |
-|----------|---------|
-| `PUBLIC_ANALYTICS_ID` | Analytics script ID |
-| `SITE_URL` | Canonical URL for sitemap (or set in `astro.config.mjs`) |
-
----
-
-## `astro.config.mjs` site URL
-
-Set your production URL for sitemaps and canonical links:
-
-```javascript
-export default defineConfig({
-  site: 'https://verdacio.example.com',
-  // ...
-});
-```
+v1 requires **no** environment variables.
 
 ---
 
@@ -74,58 +55,33 @@ export default defineConfig({
 | Branch | Deploy target |
 |--------|---------------|
 | `main` | Production |
-| PR branches | Preview deployments (automatic on Vercel/Cloudflare) |
-
----
-
-## CI checklist
-
-On every push to `main`:
-
-1. Install dependencies (`npm ci`)
-2. Run build (`npm run build`)
-3. Deploy `dist/` to CDN
-
-Both Cloudflare Pages and Vercel do this automatically. No GitHub Actions required unless you want extra steps (lint, link checking).
-
----
-
-## Optional GitHub Actions
-
-If you prefer explicit CI or deploy to GitHub Pages:
-
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      # Add deploy step for your host
-```
+| PR branches | Vercel preview URLs |
 
 ---
 
 ## Post-deploy verification
 
-- [ ] Home page loads over HTTPS
-- [ ] All game thumbnails visible
-- [ ] Each game link opens Unity Play
+- [ ] Home page loads over HTTPS (dark theme)
+- [ ] Game thumbnails visible
+- [ ] Game detail embed loads Unity Play iframe
+- [ ] "Open on Unity Play" fallback works
 - [ ] `/about` accessible
-- [ ] Sitemap at `/sitemap-index.xml` (after `@astrojs/sitemap` added)
-- [ ] Mobile layout looks correct
+- [ ] Mobile layout correct
 
 ---
 
 ## Rollback
 
-Revert the git commit on `main` and push. CDN redeploys the previous version within minutes.
+Revert the commit on `main` and push. Vercel redeploys the previous version.
+
+---
+
+## What Vercel does NOT host
+
+| Asset | Hosted on |
+|-------|-----------|
+| WebGL `.wasm`, `.data`, `.js` | Unity Play |
+| Game runtime | Unity Play (via iframe) |
+| Thumbnails, HTML, CSS | Vercel |
+
+This keeps Vercel well within free tier limits.

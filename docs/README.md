@@ -1,6 +1,6 @@
-# Verdacio documentation
+# Playframe documentation
 
-Documentation for the Verdacio game portfolio website.
+Documentation for the Playframe game portfolio website.
 
 ## Index
 
@@ -8,8 +8,9 @@ Documentation for the Verdacio game portfolio website.
 
 | Document | Description |
 |----------|-------------|
-| [Design spec](superpowers/specs/2026-07-13-verdacio-design.md) | Approved direction, pages, content model, and tech choices |
-| [Stack research](research/website-stack-research.md) | Framework, hosting, and Unity Play integration research |
+| [Design spec](superpowers/specs/2026-07-13-playframe-design.md) | Approved direction: Playframe, Vercel, dark theme, Unity Play embeds |
+| [Unity Play embed research](research/unity-play-embed-research.md) | Embed from Unity Play without self-hosting WebGL |
+| [Stack research](research/website-stack-research.md) | Framework and hosting comparison |
 
 ### Architecture
 
@@ -22,9 +23,9 @@ Documentation for the Verdacio game portfolio website.
 
 | Document | Description |
 |----------|-------------|
-| [Unity Play integration](guides/unity-play-integration.md) | Build, publish, and embed games from Unity Play |
-| [Adding a game](guides/adding-a-game.md) | Step-by-step: new game → live on Verdacio |
-| [Deployment](guides/deployment.md) | Build and deploy the static site |
+| [Unity Play integration](guides/unity-play-integration.md) | Build, publish, and get embed links |
+| [Adding a game](guides/adding-a-game.md) | Step-by-step: new game → live on Playframe |
+| [Deployment](guides/deployment.md) | Deploy to Vercel |
 | [Local development](guides/local-development.md) | Run the site locally (after scaffolding) |
 
 ### Reference

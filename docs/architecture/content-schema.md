@@ -10,8 +10,6 @@ Each game is a content entry validated at build time by Astro Content Collection
 content/games/<slug>.md
 ```
 
-The filename should match the `slug` field (kebab-case).
-
 ---
 
 ## Frontmatter schema
@@ -23,8 +21,9 @@ The filename should match the `slug` field (kebab-case).
 | `title` | `string` | Display name |
 | `slug` | `string` | URL segment, kebab-case, unique |
 | `description` | `string` | Short summary (card + meta); 1–2 sentences |
-| `unityPlayUrl` | `string` | Public Unity Play page URL (`https://play.unity.com/...`) |
-| `thumbnail` | `string` | Path to image, relative to `content/games/` or `public/` |
+| `unityPlayUrl` | `string` | Unity Play page URL — fallback link |
+| `embedUrl` | `string` | Unity Play iframe src — **primary playback** |
+| `thumbnail` | `string` | Path to cover image |
 | `status` | `enum` | `released` \| `coming-soon` \| `archived` |
 | `releasedAt` | `date` | ISO date (`2026-07-01`) |
 
@@ -32,7 +31,6 @@ The filename should match the `slug` field (kebab-case).
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `embedUrl` | `string` | — | Unity Play iframe src URL |
 | `tags` | `string[]` | `[]` | e.g. `["puzzle", "3d", "webgl"]` |
 | `featured` | `boolean` | `false` | Show in home hero |
 | `screenshots` | `string[]` | `[]` | Gallery image paths |
@@ -40,6 +38,10 @@ The filename should match the `slug` field (kebab-case).
 | `platform` | `string` | `"WebGL"` | Shown in metadata |
 | `unityVersion` | `string` | — | e.g. `"6000.0.34f1"` |
 | `playTime` | `string` | — | e.g. `"5–10 min"` |
+
+### `embedUrl` requirement
+
+For `status: released`, `embedUrl` is **required**. The build fails without it. Coming-soon games may omit it.
 
 ---
 
@@ -49,35 +51,21 @@ The filename should match the `slug` field (kebab-case).
 ---
 title: "Neon Drift"
 slug: "neon-drift"
-description: "A fast arcade racer through a neon city. Dodge traffic and beat your best time."
+description: "A fast arcade racer through a neon city."
 unityPlayUrl: "https://play.unity.com/en/games/00000000-0000-0000-0000-000000000000"
 embedUrl: "https://play.unity3dusercontent.com/webgl/00000000-0000-0000-0000-000000000000?screenshot=false&embedType=embed"
 thumbnail: "./images/neon-drift-cover.png"
-screenshots:
-  - "./images/neon-drift-1.png"
-  - "./images/neon-drift-2.png"
 tags:
   - arcade
   - racing
-  - webgl
 status: released
 featured: true
 releasedAt: 2026-06-15
-unityVersion: "6000.0.34f1"
 ---
 
 ## About
 
-Longer description in markdown. Supports **bold**, lists, and more.
-
-### How to play
-
-- Arrow keys or WASD to steer
-- Space to boost
-
-### Credits
-
-Music by …
+Longer description in markdown.
 ```
 
 ---
@@ -95,7 +83,7 @@ const games = defineCollection({
       slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
       description: z.string().max(300),
       unityPlayUrl: z.string().url(),
-      embedUrl: z.string().url().optional(),
+      embedUrl: z.string().url(),
       thumbnail: image(),
       screenshots: z.array(image()).optional(),
       tags: z.array(z.string()).default([]),
@@ -114,30 +102,18 @@ export const collections = { games };
 
 ---
 
-## Status behavior
+## URL validation
 
-| Status | On home grid | Detail page | Play CTA |
-|--------|--------------|-------------|----------|
-| `released` | Visible | Full | Active |
-| `coming-soon` | Visible (badge) | Teaser only | Disabled |
-| `archived` | Hidden | Accessible via URL | Link may still work |
+- `unityPlayUrl` must use `https://play.unity.com/` domain
+- `embedUrl` must use `https://play.unity3dusercontent.com/` domain
 
 ---
 
 ## Image guidelines
 
-| Asset | Recommended size | Format |
-|-------|------------------|--------|
+| Asset | Size | Format |
+|-------|------|--------|
 | Thumbnail | 800×450 (16:9) | PNG or WebP |
 | Screenshots | 1280×720 | PNG or WebP |
 
-Store game images alongside the markdown file under `content/games/images/<slug>/` or in `public/images/games/<slug>/`.
-
----
-
-## Validation rules
-
-- `slug` must be unique across all game files
-- `unityPlayUrl` must use `https://play.unity.com/` domain
-- `embedUrl` if present must use `https://play.unity3dusercontent.com/` domain
-- `releasedAt` cannot be in the future for `status: released` (warning only)
+Store under `content/games/images/<slug>/` or `public/images/games/<slug>/`.

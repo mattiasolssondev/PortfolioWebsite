@@ -1,13 +1,13 @@
-# Contributing to Verdacio
+# Contributing to Playframe
 
-Thanks for contributing. Verdacio is a personal game portfolio, but contributions (docs, fixes, features) are welcome.
+Thanks for contributing. Playframe is a personal game portfolio, but contributions (docs, fixes, features) are welcome.
 
 ---
 
 ## Getting started
 
 1. Read [docs/README.md](docs/README.md) for documentation index
-2. Read the [design spec](docs/superpowers/specs/2026-07-13-verdacio-design.md)
+2. Read the [design spec](docs/superpowers/specs/2026-07-13-playframe-design.md)
 3. For local setup (after scaffolding), see [local development](docs/guides/local-development.md)
 
 ---

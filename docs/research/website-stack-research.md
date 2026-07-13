@@ -1,23 +1,23 @@
 # Website stack research
 
 **Date:** 2026-07-13  
-**Status:** Draft  
-**Purpose:** Evaluate the best way to build Verdacio — a static game portfolio site that links to Unity Play WebGL games.
+**Status:** Approved  
+**Purpose:** Evaluate the best way to build Playframe — a static game portfolio on Vercel that embeds Unity Play WebGL games.
 
 ---
 
 ## Requirements
 
-Verdacio needs to:
+Playframe needs to:
 
-1. List games with title, description, thumbnail, tags, and links
-2. Link out to Unity Play (and optionally embed games inline)
+1. List games with title, description, thumbnail, tags
+2. Embed games on detail pages via Unity Play iframe (no WebGL on Vercel)
 3. Load fast on mobile and desktop
-4. Be cheap or free to host
-5. Be easy to update when a new game ships (no CMS required initially)
-6. Support a personal brand (about page, social links)
+4. Be cheap or free to host (Vercel free tier)
+5. Be easy to update when a new game ships
+6. Dark-themed personal brand (about page, social links)
 
-Verdacio does **not** need (initially):
+Playframe does **not** need (initially):
 
 - User accounts or authentication
 - A database or server-side API
@@ -48,23 +48,11 @@ Verdacio does **not** need (initially):
 
 For portfolio games, **Unlisted** is a good default: not in Unity Play browse/search, but playable via link. Add a password only if you need restricted access.
 
-### Embedding on Verdacio
+### Embedding on Playframe
 
-Unity Play provides embed codes via **Share → Embed**. Typical iframe pattern:
+Unity Play provides embed codes via **Share → Embed**. See [unity-play-embed-research.md](unity-play-embed-research.md) for full analysis.
 
-```html
-<iframe
-  id="webgl_iframe"
-  frameborder="0"
-  allow="autoplay; fullscreen; vr"
-  allowfullscreen
-  src="https://play.unity3dusercontent.com/webgl/<game-id>?screenshot=false&embedType=embed"
-  width="810"
-  height="640"
-></iframe>
-```
-
-**Recommendation:** Use **link-out** as the primary CTA ("Play on Unity Play") and offer **optional embed** on individual game detail pages. Embedding keeps users on your site but loads a heavy WebGL runtime; linking is lighter and simpler.
+**Decision:** **Embed is primary** on game detail pages. Unity Play hosts all WebGL files; Playframe renders an iframe. Vercel never stores game binaries. Fallback "Open on Unity Play" link for mobile/issues.
 
 ### Alternatives considered
 
@@ -93,13 +81,13 @@ Unity Play provides embed codes via **Share → Embed**. Typical iframe pattern:
 
 ### Astro (recommended)
 
-**Why Astro fits Verdacio:**
+**Why Astro fits Playframe:**
 
 - **Content-first:** Game catalog is markdown/JSON with validated frontmatter — no database
 - **Performance:** Ships static HTML; game iframes load only on game detail pages
 - **Islands:** Add React/Vue/Svelte only where needed (e.g. image gallery, theme toggle)
 - **DX:** Fast builds, good TypeScript support, large theme ecosystem
-- **Deployment:** Static output works on Cloudflare Pages, Vercel, Netlify, GitHub Pages
+- **Deployment:** Static output on Vercel with git-based deploys
 
 Portfolio sites migrated from Next.js to Astro report Lighthouse 100 scores and dramatically reduced client JS. For a site that is mostly game cards and text, Astro avoids shipping a React bundle on every page.
 
@@ -123,16 +111,19 @@ Works for 2–3 games but does not scale when adding metadata, tags, or consiste
 
 ---
 
-## Hosting comparison
+## Hosting
 
-| Host | Free tier | Custom domain | Build from Git | Notes |
-|------|-----------|---------------|----------------|-------|
-| **Cloudflare Pages** | Yes | Yes | Yes | Fast global CDN, generous limits |
-| **Vercel** | Yes | Yes | Yes | Excellent DX, Astro-first-class |
-| **Netlify** | Yes | Yes | Yes | Similar to Vercel |
-| **GitHub Pages** | Yes | Yes | Actions required | Simpler, fewer features |
+**Decision: Vercel**
 
-**Recommendation:** **Cloudflare Pages** or **Vercel**. Both support Astro, free custom domains, and automatic deploys on push to `main`.
+| Feature | Vercel |
+|---------|--------|
+| Free tier | Yes |
+| Custom domain | Yes (add later) |
+| Astro support | First-class auto-detection |
+| Preview deploys | Per PR |
+| WebGL hosting | No — and not needed |
+
+Vercel serves only static Astro output. Game files stay on Unity Play.
 
 ---
 
@@ -185,12 +176,13 @@ Consider Sanity, Contentful, or Decap CMS if non-technical collaborators need to
 
 | Layer | Choice | Rationale |
 |-------|--------|-----------|
-| Framework | **Astro 5.x** | Best fit for content-heavy portfolio; minimal JS |
-| Styling | **Tailwind CSS** or plain CSS | Fast iteration; Tailwind is common in Astro starters |
-| Content | **Astro Content Collections** | Typed game metadata, MDX for rich descriptions |
-| Game hosting | **Unity Play** | Free, matches your workflow |
-| Site hosting | **Cloudflare Pages** or **Vercel** | Free, fast, git-based deploys |
-| Analytics (optional) | **Plausible** or **Cloudflare Web Analytics** | Privacy-friendly, lightweight |
+| Framework | **Astro 5.x** | Content-heavy portfolio; minimal JS |
+| Styling | **Tailwind CSS**, dark theme | Fast iteration; dark-first for game showcase |
+| Content | **Astro Content Collections** | Typed metadata; `embedUrl` required |
+| Game hosting | **Unity Play embed** | No WebGL on Vercel |
+| Site hosting | **Vercel** | Astro-first-class; free tier |
+| Theme | **Dark-first** | Game portfolio aesthetic |
+| Custom domain | **Later** | Vercel subdomain until ready |
 
 ---
 

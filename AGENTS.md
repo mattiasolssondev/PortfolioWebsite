@@ -1,14 +1,15 @@
 # Agent instructions
 
-Guidance for AI coding assistants working on Verdacio.
+Guidance for AI coding assistants working on Playframe.
 
 ## Project purpose
 
-Verdacio is a static Astro portfolio site linking to Unity WebGL games hosted on Unity Play. It is **not** a game host.
+Playframe is a dark-themed static Astro portfolio on Vercel that embeds Unity WebGL games from Unity Play via iframe. It is **not** a game host — WebGL builds are never uploaded to Vercel.
 
 ## Before implementing
 
-1. Read [design spec](docs/superpowers/specs/2026-07-13-verdacio-design.md)
+1. Read [design spec](docs/superpowers/specs/2026-07-13-playframe-design.md)
+2. Read [Unity Play embed research](docs/research/unity-play-embed-research.md)
 2. Read [architecture overview](docs/architecture/overview.md)
 3. Read [content schema](docs/architecture/content-schema.md)
 
@@ -16,8 +17,8 @@ Verdacio is a static Astro portfolio site linking to Unity WebGL games hosted on
 
 - Astro 5.x + TypeScript
 - Content Collections with Zod validation
-- Tailwind CSS (unless design changes)
-- Deploy to Cloudflare Pages or Vercel
+- Tailwind CSS, dark theme
+- Deploy to Vercel
 
 ## Conventions
 
@@ -29,7 +30,7 @@ Verdacio is a static Astro portfolio site linking to Unity WebGL games hosted on
 
 ## Do not
 
-- Self-host WebGL builds without explicit request
+- Self-host WebGL builds on Vercel (Unity Play embed only)
 - Add a CMS, database, or auth in v1
 - Ship heavy client JS on the home page
 - Skip content schema validation

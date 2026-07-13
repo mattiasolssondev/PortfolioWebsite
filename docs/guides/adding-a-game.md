@@ -1,135 +1,104 @@
-# Adding a game to Verdacio
+# Adding a game to Playframe
 
-End-to-end checklist: from Unity build to live on your portfolio site.
+Checklist: Unity Play publish → embed URL → content file → deploy to Vercel.
 
 ---
 
 ## Checklist
 
-- [ ] Game built and published on Unity Play
-- [ ] Share URL copied
-- [ ] Embed URL copied (optional)
-- [ ] Thumbnail image prepared (800×450, 16:9)
-- [ ] Screenshots prepared (optional)
-- [ ] Content file created in `content/games/`
-- [ ] Site built locally and verified
-- [ ] Changes committed and deployed
+- [ ] Game published on Unity Play
+- [ ] Share URL copied (`unityPlayUrl`)
+- [ ] Embed URL copied from Share → Embed (`embedUrl`)
+- [ ] Thumbnail prepared (800×450, 16:9)
+- [ ] Content file in `content/games/`
+- [ ] Build passes locally
+- [ ] Pushed to `main` → Vercel deploys
 
 ---
 
 ## 1. Publish on Unity Play
 
-Follow [Unity Play integration](unity-play-integration.md) if you haven't already.
+Follow [Unity Play integration](unity-play-integration.md). You need **both** URLs:
 
-You need at minimum:
+| Field | Source |
+|-------|--------|
+| `unityPlayUrl` | Browser URL of game page |
+| `embedUrl` | Share → Embed → iframe `src` |
 
-- **unityPlayUrl** — e.g. `https://play.unity.com/en/games/abc-123`
-
----
-
-## 2. Prepare images
-
-Create a folder for the game's images:
-
-```
-content/games/images/my-game/
-├── cover.png          # Thumbnail (required)
-├── screenshot-1.png   # Optional
-└── screenshot-2.png
-```
-
-Or use `public/images/games/my-game/` if you prefer static public paths.
+**Do not** upload WebGL files anywhere else.
 
 ---
 
-## 3. Create the content file
+## 2. Prepare thumbnail
 
-Create `content/games/my-game.md`:
+```
+content/games/images/my-game/cover.png
+```
+
+---
+
+## 3. Create content file
+
+`content/games/my-game.md`:
 
 ```markdown
 ---
 title: "My Game"
 slug: "my-game"
-description: "One-line pitch that appears on the game card."
-unityPlayUrl: "https://play.unity.com/en/games/YOUR-UUID-HERE"
-embedUrl: "https://play.unity3dusercontent.com/webgl/YOUR-UUID-HERE?screenshot=false&embedType=embed"
+description: "One-line pitch for the game card."
+unityPlayUrl: "https://play.unity.com/en/games/YOUR-UUID"
+embedUrl: "https://play.unity3dusercontent.com/webgl/YOUR-UUID?screenshot=false&embedType=embed"
 thumbnail: "./images/my-game/cover.png"
-screenshots:
-  - "./images/my-game/screenshot-1.png"
 tags:
   - puzzle
-  - 3d
 status: released
-featured: false
 releasedAt: 2026-07-13
 ---
 
 ## About
 
-Longer description here. What the game is about, what makes it interesting.
-
-## Controls
-
-- WASD — move
-- Mouse — look
+Full description. The game plays via Unity Play embed above.
 ```
-
-See [content schema](../architecture/content-schema.md) for all fields.
 
 ---
 
 ## 4. Verify locally
-
-After the Astro site is scaffolded:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321) and check:
+Check:
 
-- [ ] Game appears on home grid
-- [ ] Card thumbnail loads
-- [ ] Detail page at `/games/my-game` renders
-- [ ] "Play on Unity Play" opens the correct game
-- [ ] Embed works (if included)
+- [ ] Card on home page
+- [ ] Detail page embed loads and game is playable
+- [ ] "Open on Unity Play" fallback works
 
 ```bash
 npm run build
 ```
-
-Build must pass with no schema validation errors.
 
 ---
 
 ## 5. Deploy
 
 ```bash
-git add content/games/my-game.md content/games/images/my-game/
+git add content/games/
 git commit -m "Add game: My Game"
 git push
 ```
 
-Hosting (Cloudflare Pages / Vercel) rebuilds automatically on push to `main`.
+Vercel rebuilds automatically. No game files go to Vercel — only metadata and thumbnail.
 
 ---
 
-## Coming soon entries
+## Coming soon
 
-For games not yet released, use `status: coming-soon`:
-
-```yaml
-status: coming-soon
-unityPlayUrl: "https://play.unity.com/en/games/..."  # optional if unlisted private build
-```
-
-The card shows a "Coming soon" badge; play buttons are disabled.
+Use `status: coming-soon` — embed optional, play disabled.
 
 ---
 
-## Removing or archiving a game
+## Updating builds
 
-Set `status: archived` — the game disappears from the home grid but the detail URL can remain for old links.
-
-To remove entirely, delete the markdown file and images, then redeploy.
+Re-upload to Unity Play only. Playframe content unchanged unless title/thumbnail/description changed.

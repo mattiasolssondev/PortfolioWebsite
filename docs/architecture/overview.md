@@ -1,6 +1,6 @@
 # Architecture overview
 
-Verdacio is a **static site** built with Astro. It does not run game logic or host WebGL binaries — Unity Play handles that. Verdacio is the catalog and front door.
+Playframe is a **static Astro site on Vercel**. It does not run game logic or host WebGL binaries — Unity Play serves the game runtime inside an iframe.
 
 ---
 
@@ -15,34 +15,30 @@ flowchart LR
         Unity --> Build --> Zip
     end
 
-    subgraph unityPlay [Unity Play]
+    subgraph unityPlay [Unity Play — game host]
         Upload[Upload / Publish]
-        GameURL[Share URL]
         EmbedURL[Embed iframe URL]
         Zip --> Upload
-        Upload --> GameURL
         Upload --> EmbedURL
     end
 
-    subgraph verdacio [Verdacio site]
+    subgraph playframe [Playframe on Vercel]
         Content[content/games/*.md]
         Astro[Astro build]
-        Static[Static HTML/CSS/JS]
+        Static[Static HTML + thumbnails]
         Content --> Astro --> Static
     end
 
-    subgraph hosting [Hosting CDN]
-        CDN[Cloudflare Pages / Vercel]
-        Static --> CDN
-    end
-
-    subgraph visitor [Visitor]
-        Browser[Browser]
-        CDN --> Browser
-        Browser -->|Play link| GameURL
-        Browser -->|Optional embed| EmbedURL
+    subgraph visitor [Visitor browser]
+        Browser[Playframe pages]
+        Iframe[Unity Play iframe]
+        Static --> Browser
+        Browser -->|embedUrl| Iframe
+        EmbedURL -.->|serves WebGL| Iframe
     end
 ```
+
+**Key point:** WebGL files never touch Vercel. Only metadata, thumbnails, and an iframe tag.
 
 ---
 
@@ -50,35 +46,28 @@ flowchart LR
 
 ```
 /
-├── docs/                       # This documentation
+├── docs/
 ├── public/
 │   ├── favicon.svg
-│   └── images/                 # Shared static assets
+│   └── images/
 ├── src/
 │   ├── components/
 │   │   ├── GameCard.astro
 │   │   ├── GameGrid.astro
-│   │   ├── UnityPlayEmbed.astro
+│   │   ├── UnityPlayEmbed.astro   # iframe wrapper
 │   │   ├── Header.astro
 │   │   └── Footer.astro
 │   ├── layouts/
-│   │   ├── BaseLayout.astro
+│   │   ├── BaseLayout.astro       # dark theme shell
 │   │   └── GameLayout.astro
 │   ├── pages/
-│   │   ├── index.astro         # Home — game grid
+│   │   ├── index.astro
 │   │   ├── about.astro
-│   │   └── games/
-│   │       └── [slug].astro    # Dynamic game detail
-│   ├── content/
-│   │   └── config.ts           # Content Collection schema (Zod)
-│   └── styles/
-│       └── global.css
-├── content/
-│   └── games/                  # Game markdown files
-│       └── _example-game.md
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+│   │   └── games/[slug].astro
+│   ├── content/config.ts
+│   └── styles/global.css            # dark theme tokens
+├── content/games/
+└── astro.config.mjs
 ```
 
 ---
@@ -87,48 +76,28 @@ flowchart LR
 
 | Route | Source | Description |
 |-------|--------|-------------|
-| `/` | `src/pages/index.astro` | Lists all `status: released` games |
-| `/games/[slug]` | `src/pages/games/[slug].astro` | Single game detail |
+| `/` | `src/pages/index.astro` | Dark-themed game card grid |
+| `/games/[slug]` | `src/pages/games/[slug].astro` | Game detail + Unity Play embed |
 | `/about` | `src/pages/about.astro` | About the creator |
 | `/404` | `src/pages/404.astro` | Not found |
-
-`getStaticPaths()` generates one static page per game at build time.
 
 ---
 
 ## Component responsibilities
 
-### `GameCard.astro`
-
-Renders a single game in the home grid. Props: game metadata. Links to `/games/[slug]`.
-
-### `GameGrid.astro`
-
-Maps over the games collection, sorts by `releasedAt` descending, renders `GameCard` for each.
-
 ### `UnityPlayEmbed.astro`
 
-Renders an iframe when `embedUrl` is present. Includes:
-- Responsive 16:9 wrapper
-- `allow="autoplay; fullscreen"` attributes
-- Fallback link: "Having trouble? Play on Unity Play"
+Primary playback component on game detail pages:
 
-### `BaseLayout.astro`
+- Responsive 16:9 iframe wrapper
+- `src` from game's `embedUrl`
+- `allow="autoplay; fullscreen; vr"`
+- Lazy-load or click-to-play for performance
+- Fallback: "Having trouble? Open on Unity Play ↗"
 
-HTML shell: `<head>` meta, header nav, footer, global styles.
+### `GameCard.astro`
 
-### `GameLayout.astro`
-
-Extends `BaseLayout` with game-specific Open Graph tags and breadcrumb.
-
----
-
-## Content pipeline
-
-1. Markdown files in `content/games/` are loaded by Astro Content Collections
-2. `src/content/config.ts` defines a Zod schema — invalid entries fail the build
-3. At build time, pages are generated as static HTML
-4. No runtime database or API calls
+Thumbnail card on home grid. Links to detail page (where embed lives). No iframe on home.
 
 ---
 
@@ -136,35 +105,25 @@ Extends `BaseLayout` with game-specific Open Graph tags and breadcrumb.
 
 | Service | Role | Failure mode |
 |---------|------|--------------|
-| Unity Play | Hosts and runs WebGL games | Play button opens Unity Play; embed shows fallback message |
-| Hosting CDN | Serves static site | Standard CDN outage — nothing site-specific to do |
-| Git provider | Source + deploy trigger | Cannot deploy until restored |
-
----
-
-## Security considerations
-
-- No user input on v1 — no XSS surface from forms
-- iframe `sandbox` is **not** recommended (breaks Unity WebGL); use Unity's official embed URL only
-- Only link to `play.unity.com` and `play.unity3dusercontent.com` domains
-- Dependencies: keep Astro and packages updated via Dependabot
+| Unity Play | Hosts WebGL + serves iframe player | Show fallback link |
+| Vercel | Serves static site | Standard CDN outage |
+| Git | Source + deploy trigger | Cannot deploy until restored |
 
 ---
 
 ## Performance notes
 
-- Home page: no iframes, no client JS required → target Lighthouse 95+
-- Game detail with embed: WebGL is heavy; lazy-load iframe (`loading="lazy"`) or load on "Play inline" button click
-- Images: use Astro image optimization for thumbnails; WebP where possible
-- Fonts: self-host or use system font stack to avoid render-blocking third-party requests
+- **Home:** no iframes → target Lighthouse 95+
+- **Game detail:** embed is heavy; lazy-load iframe or load on "Play" click
+- **Vercel:** only static assets — well within free tier limits
+- **Thumbnails:** Astro image optimization, WebP
 
 ---
 
-## Future extension points
+## Security
 
-| Feature | Approach |
-|---------|----------|
-| Tag filter | Client island or query-param filtered static pages |
-| Blog | Second Content Collection `content/posts/` |
-| CMS | Replace git content with Sanity/etc. at build time |
-| Self-hosted WebGL | Add `playMode: "self-hosted"` field + static files in `public/games/` |
+- Only embed URLs from `play.unity3dusercontent.com`
+- Only link to `play.unity.com` for fallback
+- No user input on v1
+
+See [Unity Play embed research](../research/unity-play-embed-research.md) for full analysis.
