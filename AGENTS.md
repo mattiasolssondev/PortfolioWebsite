@@ -34,6 +34,7 @@ Playframe is a dark-themed static Astro portfolio on Vercel that embeds Unity We
 - Add a CMS, database, or auth in v1
 - Ship heavy client JS on the home page
 - Skip content schema validation
+- Add secrets or sensitive data — this repo is **public on GitHub** (no API keys, tokens, `.env` values, or credentials in tracked files)
 
 ## Key docs
 

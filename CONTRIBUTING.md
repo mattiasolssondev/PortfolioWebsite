@@ -4,6 +4,23 @@ Thanks for contributing. Playframe is a personal game portfolio, but contributio
 
 ---
 
+## Public repository — no secrets
+
+This project is **public on GitHub**. Anyone can read the full history of every commit. **Never add sensitive or secret information** to the repository.
+
+Do not commit:
+
+- API keys, tokens, or passwords
+- `.env` files or any file containing real credentials (use `.env.example` with placeholder values only)
+- Private URLs, internal hostnames, or unpublished access links you do not intend to share
+- Personal data you would not want public
+
+For deployment secrets (e.g. Vercel environment variables), configure them in the hosting provider's dashboard — not in tracked files. `.env` is already listed in `.gitignore`; keep local secrets local.
+
+If you accidentally commit a secret, rotate it immediately and remove it from the repo history — do not assume deleting the file in a follow-up commit is enough.
+
+---
+
 ## Getting started
 
 1. Read [docs/README.md](docs/README.md) for documentation index

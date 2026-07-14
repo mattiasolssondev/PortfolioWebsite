@@ -16,4 +16,6 @@ releasedAt: 2026-04-24
 
 ## About
 
-Survive monster waves on hostile planets, chase optional objectives, and reload through quick math quizzes — space expedition combat where learning keeps your ammo and tempo alive.
+Drop into hostile planets and fight monster waves with limited ammo. Between fights, quick math quizzes gate your reloads — answer fast to stay in the fight, slip up and the tempo collapses.
+
+Space expedition combat where learning is the reload mechanic.

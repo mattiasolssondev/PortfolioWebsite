@@ -16,6 +16,6 @@ releasedAt: 2026-04-24
 
 ## About
 
-You are bioluminescent prey in black water. Collect residue, level up, pick boons, climb pressure, beat the leviathan or lose the signal.
+You are bioluminescent prey in black water. Swarms close in from the dark while you collect residue, level up, and pick boons that reshape each run.
 
-Top-down deep-sea horde survival with roguelike progression.
+Top-down deep-sea horde survival with roguelike pressure — climb depth, survive the swarm, and beat the leviathan before you lose the signal.

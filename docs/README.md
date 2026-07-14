@@ -42,6 +42,10 @@ Documentation for the Playframe game portfolio website.
 - **Architecture** docs explain *how* the system fits together.
 - **Research** docs capture decisions and alternatives considered.
 
+## Public repository
+
+This project is **public on GitHub**. Do not add API keys, tokens, credentials, or other secrets to any file in the repo. See [CONTRIBUTING.md](../CONTRIBUTING.md#public-repository--no-secrets) for contributor guidance.
+
 ## Status legend
 
 | Label | Meaning |
