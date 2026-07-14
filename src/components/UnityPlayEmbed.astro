@@ -61,8 +61,8 @@ const posterTags = tags.slice(0, 3);
       >
       </div>
 
-      <div class="relative z-10 flex h-full flex-col justify-between p-5 sm:p-6">
-        <div class="flex flex-wrap gap-2">
+      <div class="relative z-10 flex h-full flex-col justify-between p-4 sm:p-6">
+        <div class="hidden flex-wrap gap-2 sm:flex">
           {
             posterTags.map((tag) => (
               <span class="rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white/85 backdrop-blur-sm">
@@ -72,18 +72,22 @@ const posterTags = tags.slice(0, 3);
           }
         </div>
 
-        <div class="flex flex-col items-center gap-4 pb-2 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
+        <div
+          class="flex flex-1 flex-col items-center justify-center gap-5 text-center sm:flex-none sm:flex-row sm:items-end sm:justify-between sm:gap-4 sm:pb-2 sm:text-left"
+        >
           <div class="max-w-xl space-y-2">
-            <p class="font-display text-2xl font-bold text-white drop-shadow-sm sm:text-3xl">
+            <p class="font-display text-xl font-bold text-white drop-shadow-sm sm:text-3xl">
               {title}
             </p>
-            <p class="line-clamp-2 text-sm leading-relaxed text-white/80 sm:text-base">
+            <p
+              class="hidden text-sm leading-relaxed text-white/80 sm:line-clamp-2 sm:block sm:text-base"
+            >
               {description}
             </p>
           </div>
 
           <span
-            class="embed-play-button flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center rounded-full text-white shadow-2xl transition-transform duration-200 group-hover:scale-105"
+            class="embed-play-button flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-white shadow-2xl transition-transform duration-200 group-hover:scale-105 sm:h-[4.5rem] sm:w-[4.5rem]"
           >
             <svg
               class="ml-1 h-9 w-9"
