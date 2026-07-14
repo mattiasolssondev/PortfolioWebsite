@@ -14,7 +14,7 @@ const iframeId = `embed-${title.replace(/\s+/g, '-').toLowerCase()}`;
     <button
       type="button"
       id={`${iframeId}-play`}
-      class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0f0f14] transition-opacity"
+      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0f0f14] transition-opacity"
       aria-label={`Play ${title}`}
     >
       <span
@@ -26,7 +26,7 @@ const iframeId = `embed-${title.replace(/\s+/g, '-').toLowerCase()}`;
     </button>
     <iframe
       id={iframeId}
-      class="absolute inset-0 h-full w-full opacity-0"
+      class="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-0"
       title={`${title} — Unity Play`}
       allow="autoplay; fullscreen; vr"
       allowfullscreen
@@ -53,7 +53,7 @@ const iframeId = `embed-${title.replace(/\s+/g, '-').toLowerCase()}`;
   playBtn?.addEventListener('click', () => {
     if (!(iframe instanceof HTMLIFrameElement)) return;
     iframe.src = embedUrl;
-    iframe.classList.remove('opacity-0');
+    iframe.classList.remove('opacity-0', 'pointer-events-none');
     playBtn.style.display = 'none';
   });
 </script>
