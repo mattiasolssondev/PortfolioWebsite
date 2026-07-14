@@ -32,6 +32,12 @@ h3 {
   aspect-ratio: 16 / 9;
 }
 
+@media (max-width: 639px) and (orientation: portrait) {
+  .embed-aspect {
+    aspect-ratio: 3 / 4;
+  }
+}
+
 .card-glow {
   transition:
     border-color 0.2s ease,
