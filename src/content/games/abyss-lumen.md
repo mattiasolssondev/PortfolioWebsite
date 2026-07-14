@@ -5,6 +5,7 @@ description: "Top-down deep-sea horde survival — bioluminescent prey in black 
 unityPlayUrl: "https://play.unity.com/en/games/e9b7e572-3fd7-4e07-a193-2288f4d70a58/abyss-lumen"
 embedUrl: "https://play-prod.struckd.com/api/v1/games/game/e9b7e572-3fd7-4e07-a193-2288f4d70a58/build/latest/frame"
 thumbnail: "/images/games/abyss-lumen.png"
+accentColor: "#5eead4"
 tags:
   - survival
   - horde

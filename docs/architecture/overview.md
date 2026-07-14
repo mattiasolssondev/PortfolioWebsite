@@ -93,6 +93,8 @@ Primary playback component on game detail pages:
 - `src` from game's `embedUrl`
 - `allow="autoplay; fullscreen; vr"`
 - Lazy-load or click-to-play for performance
+- **Play poster** — game `thumbnail` as a full-bleed cover with gradient overlay and play CTA (Playframe UI, not Unity Play)
+- **Fullscreen toggle** — expands the embed container via the browser Fullscreen API (not Unity `postMessage`; third-party sites cannot drive Unity Play's internal fullscreen commands)
 - Fallback: "Having trouble? Open on Unity Play ↗"
 
 ### `GameCard.astro`

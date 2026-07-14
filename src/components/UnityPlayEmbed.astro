@@ -3,57 +3,278 @@ interface Props {
   embedUrl: string;
   unityPlayUrl: string;
   title: string;
+  description: string;
+  thumbnail: string;
+  poster?: string;
+  accentColor?: string;
+  tags?: string[];
 }
 
-const { embedUrl, unityPlayUrl, title } = Astro.props;
+const {
+  embedUrl,
+  unityPlayUrl,
+  title,
+  description,
+  thumbnail,
+  poster,
+  accentColor,
+  tags = [],
+} = Astro.props;
+
 const iframeId = `embed-${title.replace(/\s+/g, '-').toLowerCase()}`;
+const coverImage = poster ?? thumbnail;
+const accentStyle = accentColor ? `--embed-accent: ${accentColor};` : '';
+const posterTags = tags.slice(0, 3);
 ---
 
-<div class="overflow-hidden rounded-xl border border-border bg-surface-raised">
-  <div class="embed-aspect relative w-full bg-[#0f0f14]" id={`${iframeId}-container`}>
+<div
+  class="overflow-hidden rounded-xl border border-border bg-surface-raised"
+  style={accentStyle}
+>
+  <div
+    class="embed-aspect embed-stage group relative w-full overflow-hidden bg-[#0f0f14]"
+    id={`${iframeId}-container`}
+  >
     <button
       type="button"
       id={`${iframeId}-play`}
-      class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0f0f14] transition-opacity"
-      aria-label={`Play ${title}`}
+      class="embed-poster absolute inset-0 z-10 flex cursor-pointer flex-col items-stretch justify-end border-0 p-0 text-left transition-opacity hover:opacity-95"
+      aria-label={`Play ${title} in browser`}
     >
-      <span
-        class="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-2xl text-white shadow-lg shadow-accent/30"
+      <img
+        src={coverImage}
+        alt=""
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+        width="1280"
+        height="720"
+        loading="eager"
+        decoding="async"
+      />
+      <div
+        class="embed-poster-overlay absolute inset-0"
+        aria-hidden="true"
       >
-        ▶
-      </span>
-      <span class="text-sm font-medium text-muted">Click to play</span>
+      </div>
+      <div
+        class="embed-poster-glow pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative z-10 flex h-full flex-col justify-between p-5 sm:p-6">
+        <div class="flex flex-wrap gap-2">
+          {
+            posterTags.map((tag) => (
+              <span class="rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white/85 backdrop-blur-sm">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+
+        <div class="flex flex-col items-center gap-4 pb-2 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
+          <div class="max-w-xl space-y-2">
+            <p class="font-display text-2xl font-bold text-white drop-shadow-sm sm:text-3xl">
+              {title}
+            </p>
+            <p class="line-clamp-2 text-sm leading-relaxed text-white/80 sm:text-base">
+              {description}
+            </p>
+          </div>
+
+          <span
+            class="embed-play-button flex h-[4.5rem] w-[4.5rem] shrink-0 items-center justify-center rounded-full text-white shadow-2xl transition-transform duration-200 group-hover:scale-105"
+          >
+            <svg
+              class="ml-1 h-9 w-9"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
     </button>
+
+    <div
+      id={`${iframeId}-loading`}
+      class="pointer-events-none absolute inset-0 z-[15] hidden flex-col items-center justify-center gap-3 bg-[#0a0a0f]/80 backdrop-blur-sm"
+      aria-hidden="true"
+    >
+      <span class="embed-loading-spinner h-10 w-10 rounded-full border-2 border-white/20 border-t-white">
+      </span>
+      <p class="text-sm font-medium text-white/90">Loading game…</p>
+    </div>
+
     <iframe
       id={iframeId}
       class="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-0"
       title={`${title} — Unity Play`}
-      allow="autoplay; fullscreen; vr"
+      allow="autoplay; fullscreen; gamepad; xr-spatial-tracking"
       allowfullscreen
       loading="lazy"
     ></iframe>
+    <button
+      type="button"
+      id={`${iframeId}-fullscreen`}
+      class="absolute top-3 right-3 z-20 hidden rounded-md border border-border/80 bg-surface/90 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:border-[var(--embed-accent,var(--color-accent))] hover:text-[var(--embed-accent,var(--color-accent))]"
+      aria-label="Enter fullscreen"
+      aria-pressed="false"
+    >
+      Fullscreen
+    </button>
   </div>
   <div class="flex items-center justify-between border-t border-border px-4 py-3">
-    <p class="text-xs text-muted">Powered by Unity Play</p>
-    <a
-      href={unityPlayUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="text-sm font-medium text-accent transition-colors hover:text-white"
-    >
-      Open on Unity Play ↗
-    </a>
+    <p class="text-xs text-muted">WebGL via Unity Play</p>
+    <div class="flex items-center gap-4">
+      <button
+        type="button"
+        id={`${iframeId}-fullscreen-bar`}
+        class="hidden text-sm font-medium text-[var(--embed-accent,var(--color-accent))] transition-colors hover:text-white"
+        aria-label="Enter fullscreen"
+        aria-pressed="false"
+      >
+        Fullscreen
+      </button>
+      <a
+        href={unityPlayUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm font-medium text-[var(--embed-accent,var(--color-accent))] transition-colors hover:text-white"
+      >
+        Open on Unity Play ↗
+      </a>
+    </div>
   </div>
 </div>
 
 <script define:vars={{ embedUrl, iframeId }}>
   const playBtn = document.getElementById(`${iframeId}-play`);
   const iframe = document.getElementById(iframeId);
+  const loading = document.getElementById(`${iframeId}-loading`);
+  const container = document.getElementById(`${iframeId}-container`);
+  const fullscreenBtn = document.getElementById(`${iframeId}-fullscreen`);
+  const fullscreenBarBtn = document.getElementById(`${iframeId}-fullscreen-bar`);
+
+  const fullscreenButtons = [fullscreenBtn, fullscreenBarBtn].filter(
+    (button) => button instanceof HTMLButtonElement,
+  );
+
+  const showFullscreenControls = () => {
+    for (const button of fullscreenButtons) {
+      button.classList.remove('hidden');
+    }
+  };
+
+  const setFullscreenLabel = (active) => {
+    const label = active ? 'Exit fullscreen' : 'Fullscreen';
+
+    for (const button of fullscreenButtons) {
+      button.textContent = label;
+      button.setAttribute('aria-label', label);
+      button.setAttribute('aria-pressed', String(active));
+    }
+  };
+
+  const revealGame = () => {
+    if (!(iframe instanceof HTMLIFrameElement)) return;
+
+    iframe.classList.remove('opacity-0', 'pointer-events-none');
+    if (playBtn instanceof HTMLElement) playBtn.style.display = 'none';
+    if (loading instanceof HTMLElement) loading.classList.add('hidden');
+    showFullscreenControls();
+  };
+
+  const toggleFullscreen = async () => {
+    if (!(container instanceof HTMLElement)) return;
+
+    try {
+      if (document.fullscreenElement === container) {
+        await document.exitFullscreen();
+        return;
+      }
+
+      await container.requestFullscreen();
+    } catch {
+      // Safari and some browsers block fullscreen without a direct user gesture.
+    }
+  };
 
   playBtn?.addEventListener('click', () => {
     if (!(iframe instanceof HTMLIFrameElement)) return;
+
+    if (loading instanceof HTMLElement) {
+      loading.classList.remove('hidden');
+      loading.classList.add('flex');
+      loading.setAttribute('aria-hidden', 'false');
+    }
+
+    iframe.addEventListener('load', revealGame, { once: true });
     iframe.src = embedUrl;
-    iframe.classList.remove('opacity-0', 'pointer-events-none');
-    playBtn.style.display = 'none';
+
+    window.setTimeout(revealGame, 12000);
+  });
+
+  for (const button of fullscreenButtons) {
+    button.addEventListener('click', () => {
+      void toggleFullscreen();
+    });
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    setFullscreenLabel(document.fullscreenElement === container);
   });
 </script>
+
+<style>
+  .embed-poster-overlay {
+    background: linear-gradient(
+      180deg,
+      rgb(10 10 15 / 0.35) 0%,
+      rgb(10 10 15 / 0.55) 45%,
+      rgb(10 10 15 / 0.92) 100%
+    );
+  }
+
+  .embed-poster-glow {
+    background: radial-gradient(
+      ellipse at bottom,
+      color-mix(in srgb, var(--embed-accent, var(--color-accent)) 28%, transparent),
+      transparent 70%
+    );
+  }
+
+  .embed-play-button {
+    border: 1px solid color-mix(in srgb, var(--embed-accent, var(--color-accent)) 55%, white);
+    background: color-mix(in srgb, var(--embed-accent, var(--color-accent)) 35%, rgb(255 255 255 / 0.08));
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.08),
+      0 12px 40px color-mix(in srgb, var(--embed-accent, var(--color-accent)) 25%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .embed-loading-spinner {
+    animation: embed-spin 0.8s linear infinite;
+  }
+
+  @keyframes embed-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .embed-stage:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+
+  .embed-stage:fullscreen iframe {
+    width: 100%;
+    height: 100%;
+  }
+</style>

@@ -12,6 +12,11 @@ const games = defineCollection({
       unityPlayUrl: z.string().url(),
       embedUrl: z.string().url().optional(),
       thumbnail: z.string(),
+      poster: z.string().optional(),
+      accentColor: z
+        .string()
+        .regex(/^#[0-9a-fA-F]{6}$/, 'accentColor must be a hex color like #8b7cf7')
+        .optional(),
       screenshots: z.array(z.string()).default([]),
       tags: z.array(z.string()).default([]),
       status: z.enum(['released', 'coming-soon', 'archived']),

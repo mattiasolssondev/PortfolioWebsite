@@ -5,6 +5,8 @@ description: "Raise Sprig, a gentle forest spirit, in a dusk woodland clearing. 
 unityPlayUrl: "https://play.unity.com/en/games/3b779de1-1c52-4f15-950f-e03c682f9bfa/cozy-forest"
 embedUrl: "https://play-prod.struckd.com/api/v1/games/game/3b779de1-1c52-4f15-950f-e03c682f9bfa/build/latest/frame"
 thumbnail: "/images/games/cozy-forest.png"
+poster: "/images/games/cozy-forest-moonlit.png"
+accentColor: "#c9a96e"
 screenshots:
   - "/images/games/cozy-forest-moonlit.png"
   - "/images/games/cozy-forest-diary.png"

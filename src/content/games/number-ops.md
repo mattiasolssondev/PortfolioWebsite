@@ -5,6 +5,7 @@ description: "Survive monster waves on hostile planets. Reload through quick mat
 unityPlayUrl: "https://play.unity.com/en/games/1ce0f34d-77f8-4080-818e-253c94d76393/number-ops"
 embedUrl: "https://play-prod.struckd.com/api/v1/games/game/1ce0f34d-77f8-4080-818e-253c94d76393/build/latest/frame"
 thumbnail: "/images/games/number-ops.png"
+accentColor: "#f97316"
 tags:
   - action
   - education

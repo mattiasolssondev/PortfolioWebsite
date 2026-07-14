@@ -24,6 +24,8 @@ content/games/<slug>.md
 | `unityPlayUrl` | `string` | Unity Play page URL — fallback link |
 | `embedUrl` | `string` | Unity Play iframe src — **primary playback** |
 | `thumbnail` | `string` | Path to cover image |
+| `poster` | `string` | Optional embed play-screen image (falls back to `thumbnail`) |
+| `accentColor` | `string` | Optional hex color for embed chrome, e.g. `"#c9a96e"` |
 | `status` | `enum` | `released` \| `coming-soon` \| `archived` |
 | `releasedAt` | `date` | ISO date (`2026-07-01`) |
 
